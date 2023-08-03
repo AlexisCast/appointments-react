@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Error from './Error';
 
-const PatientForm = ({ patients, setPatients }) => {
+const PatientForm = ({ patients, setPatients, patient }) => {
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
@@ -9,9 +10,24 @@ const PatientForm = ({ patients, setPatients }) => {
 
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    if (Object.keys(patient).length > 0) {
+      setName(patient.name);
+      setOwner(patient.owner);
+      setEmail(patient.email);
+      setDate(patient.date);
+      setSymptoms(patient.symptoms);
+    }
+  }, [patient]);
+
+  const generateId = () => {
+    const random = Math.random().toString(36).substring(2);
+    const date = Date.now().toString(36);
+    return random + date;
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if ([name, owner, email, date, symptoms].includes('')) {
       setError(true);
       return;
@@ -25,11 +41,24 @@ const PatientForm = ({ patients, setPatients }) => {
         date,
         symptoms
       };
-      setPatients([...patients, objectPatient]);
-      
+
+      if (patient.id) {
+        //Edit data
+        objectPatient.id = patient.id;
+
+        const updatedPatients = patients.map((patientState) =>
+          patientState.id === patient.id ? objectPatient : patientState
+        );
+        setPatients(updatedPatients);
+      } else {
+        //New data
+        objectPatient.id = generateId();
+        setPatients([...patients, objectPatient]);
+      }
+
       //reset the form
-      setName('')
-      setOwner('')
+      setName('');
+      setOwner('');
       setEmail('');
       setDate('');
       setSymptoms('');
@@ -50,9 +79,9 @@ const PatientForm = ({ patients, setPatients }) => {
 
       <form onSubmit={handleSubmit} className="mt-5 bg-white shadow-md rounded-lg py-10 px-5 mb-10">
         {error && (
-          <div className="bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded-md">
-            There is an Error...
-          </div>
+          <Error>
+            <p>All fields are manadory</p>
+          </Error>
         )}
         <div className="mb-5">
           <label className="block text-gray-700 uppercase font-bold" htmlFor="pet">
@@ -125,7 +154,7 @@ const PatientForm = ({ patients, setPatients }) => {
         <input
           className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-all"
           type="submit"
-          value="Add Patient"
+          value={patient.id ? 'Edit Patient' : 'Add Patient'}
         />
       </form>
     </div>
