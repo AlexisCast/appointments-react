@@ -1,6 +1,6 @@
 import Patient from './Patient';
 
-const PatientList = ({ patients, setPatient }) => {
+const PatientList = ({ patients, setPatient, eliminatePatient }) => {
   return (
     <div className="md:w-1/2 lg:w-3/5">
       {patients && patients.length ? (
@@ -12,7 +12,12 @@ const PatientList = ({ patients, setPatient }) => {
 
           <div className="h-screen md:overflow-y-scroll">
             {patients.map((patient, index) => (
-              <Patient key={patient.id} patient={patient} setPatient={setPatient} />
+              <Patient
+                key={patient.id}
+                patient={patient}
+                setPatient={setPatient}
+                eliminatePatient={eliminatePatient}
+              />
             ))}
           </div>
         </>

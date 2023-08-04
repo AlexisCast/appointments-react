@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Error from './Error';
 
-const PatientForm = ({ patients, setPatients, patient }) => {
+const PatientForm = ({ patients, setPatients, patient, setPatient }) => {
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
@@ -50,6 +50,7 @@ const PatientForm = ({ patients, setPatients, patient }) => {
           patientState.id === patient.id ? objectPatient : patientState
         );
         setPatients(updatedPatients);
+        setPatient({});
       } else {
         //New data
         objectPatient.id = generateId();

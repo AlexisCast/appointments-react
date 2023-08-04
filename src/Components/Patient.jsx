@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
 
-const Patient = ({ patient, setPatient }) => {
-  const { name, owner, email, date, symptoms } = patient;
+const Patient = ({ patient, setPatient, eliminatePatient }) => {
+  const { name, owner, email, date, symptoms, id } = patient;
 
+  const handleEliminate = () => {
+    const answer = confirm('Are you sure to eliminate the patient');
+    if (answer) {
+      eliminatePatient(id);
+    }
+  };
   return (
     <div className="mx-5 mt-5 bg-white shadow-md rounded-lg py-10 px-5 mb-10">
       <p className="font-bold mb-3 text-gray-700 uppercase">
@@ -35,7 +41,8 @@ const Patient = ({ patient, setPatient }) => {
 
         <button
           type="button"
-          className="py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg">
+          className="py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
+          onClick={handleEliminate}>
           Eliminate
         </button>
       </div>
